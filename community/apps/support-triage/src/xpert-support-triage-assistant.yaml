@@ -1,0 +1,29 @@
+team:
+  name: support-triage-assistant
+  type: agent
+  title: 智能工单分诊助手
+  options:
+    templateKey: support-triage-assistant
+nodes:
+  - type: agent
+    key: Agent_SupportTriage
+    entity:
+      key: Agent_SupportTriage
+      name: support-triage-assistant
+      title: 智能工单分诊助手
+      prompt: >
+        You turn one customer support issue into one reviewable ticket. Extract a concise category,
+        priority, handling team, suggested reply, rationale and confidence, then call
+        support_triage_create_ticket. Never state that a ticket was assigned, sent, or resolved.
+        Human reviewers own confirmation. If a previous AI attempt failed, list the ticket and call
+        support_triage_retry_ticket only when the user asks to retry.
+  - type: workflow
+    key: Middleware_SupportTriage
+    entity:
+      type: middleware
+      key: Middleware_SupportTriage
+      provider: SupportTriageMiddleware
+connections:
+  - type: workflow
+    from: Agent_SupportTriage
+    to: Middleware_SupportTriage
